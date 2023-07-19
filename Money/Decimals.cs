@@ -18,7 +18,7 @@ public abstract record Decimal
         if (value < 0)
             return Result<INonNegativeDecimal>.Fail(new UnknownError());
         else if (value == 0)
-            return Result<INonNegativeDecimal>.Ok(new ZeroDecimal());
+            return Result<INonNegativeDecimal>.Ok(new Zero());
         else
             return PositiveDecimal.Create(value)
                 .Map(positive => Result<INonNegativeDecimal>.Ok(positive));
@@ -34,7 +34,7 @@ public abstract record Decimal
         if (value > 0)
             return Result<INonPositiveDecimal>.Fail(new UnknownError());
         else if (value == 0)
-            return Result<INonPositiveDecimal>.Ok(new ZeroDecimal());
+            return Result<INonPositiveDecimal>.Ok(new Zero());
         else
             return NegativeDecimal.Create(value)
                 .Map(negative => Result<INonPositiveDecimal>.Ok(negative));
@@ -44,7 +44,7 @@ public abstract record Decimal
 }
 
 ///<summary>
-///An interface to work with PositiveDecimal and ZeroDecimal
+///An interface to work with PositiveDecimal and Zero
 ///</summary>
 public interface INonNegativeDecimal
 {
@@ -52,7 +52,7 @@ public interface INonNegativeDecimal
 }
 
 ///<summary>
-///An interface to work with NegativeDecimal and ZeroDecimal
+///An interface to work with NegativeDecimal and Zero
 ///</summary>
 public interface INonPositiveDecimal
 {
@@ -62,7 +62,7 @@ public interface INonPositiveDecimal
 ///<summary>
 ///The decimal representation of zero
 ///</summary>
-public record ZeroDecimal : Decimal, INonNegativeDecimal, INonPositiveDecimal
+public record Zero : Decimal, INonNegativeDecimal, INonPositiveDecimal
 {
     public override decimal Value => 0;
 }
