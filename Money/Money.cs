@@ -1,20 +1,5 @@
 namespace Money;
 using Results;
-
-public interface IMoney
-{
-    decimal Value { get; }
-    Currency Currency { get; }
-    string Representation();
-    Result<Funds> Convert(ConversionRate rate);
-}
-
-public interface INonNegativeMoney : IMoney
-{}
-
-public interface IDebt : IMoney
-{}
-
 public abstract record Funds : IMoney
 {
     public decimal Value { get; }
@@ -77,16 +62,4 @@ public record Money : Funds, INonNegativeMoney
             CheckCurrenciesMatch(rate.From)
                 .Map(() => PositiveDecimal.Create(Value * rate.ConvertionRate))
                 .Map(value => new Money(value, rate.To) as Funds);
-}
-
-public class MismatchCurrency : IError
-{
-    private string _message;
-    public string Message => _message;
-
-    public MismatchCurrency(Currency a, Currency b) =>
-        _message = String.Format(
-            "Currency {0} does not match currency {1}");
-
-    public void Log() => Console.WriteLine(_message);
 }
