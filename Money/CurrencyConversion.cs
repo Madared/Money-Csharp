@@ -68,7 +68,6 @@ public class CurrencyConverterFactory
 
     private bool ConverterExpired() =>
         _dateOfConverterCreation.IsNone() ||
-        _dateOfConverterCreation.IsSome() &&
         _dateOfConverterCreation.Data - DateTime.Now > TimeSpan.FromHours(6);
 
 }
