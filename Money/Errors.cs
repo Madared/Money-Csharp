@@ -8,7 +8,7 @@ public class ConversionNotFound : IError
     public string Message => _message;
     public ConversionNotFound(Currency from, Currency to) =>
         _message = String.Format(
-            "Could not find conversion between {0} and {1}");
+            "Could not find conversion between {0} and {1}", from, to);
 
     public void Log() => throw new NotImplementedException();
 }
@@ -21,7 +21,7 @@ public class MismatchCurrency : IError
 
     public MismatchCurrency(Currency a, Currency b) =>
         _message = String.Format(
-            "Currency {0} does not match currency {1}");
+            "Currency {0} does not match currency {1}", a, b);
 
     public void Log() => Console.WriteLine(_message);
 }
