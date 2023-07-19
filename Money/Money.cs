@@ -28,38 +28,19 @@ public abstract record Funds : IMoney
                 .Data
                 .PipeNonNull(positive => new Money(positive, currency));
     }
-
-    public abstract Result<Funds> Convert(ConversionRate rate); 
-    public Result CheckCurrenciesMatch(Currency currency) =>
-        Currency != currency
-            ? Result.Fail(new MismatchCurrency(currency, Currency))
-            : Result.Ok();
 }
 
 public record NoMoney : Funds, INonNegativeMoney
 {
     public NoMoney(Currency currency) : base(0, currency) { }
-
-    public override Result<Funds> Convert(ConversionRate rate) =>
-        CheckCurrenciesMatch(rate.From)
-            .Map(() => new NoMoney(rate.To) as Funds);
 }
 
 public record Debt : Funds
 {
     public Debt(NegativeDecimal value, Currency currency) : base(value, currency) { }
-
-    public override Result<Funds> Convert(ConversionRate rate) =>
-            CheckCurrenciesMatch(rate.From)
-                .Map(() => NegativeDecimal.Create(Value * rate.ConvertionRate))
-                .Map(value => new Debt(value, rate.To) as Funds);
 }
 
 public record Money : Funds, INonNegativeMoney
 {
     public Money(PositiveDecimal value, Currency currency) : base(value, currency) { }
-    public override Result<Funds> Convert(ConversionRate rate) =>
-            CheckCurrenciesMatch(rate.From)
-                .Map(() => PositiveDecimal.Create(Value * rate.ConvertionRate))
-                .Map(value => new Money(value, rate.To) as Funds);
 }
