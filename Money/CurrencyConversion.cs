@@ -35,31 +35,3 @@ public class CurrencyConverter
                 .PipeNonNull(convertedValue => Funds.Create(convertedValue, newCurrency)));
 }
 
-public class CurrencyConverterFactory
-{
-    private CurrencyConverter _currentConverter;
-    private DateTime _dateOfConverterCreation;
-    private IConversionGetter _conversionGetter;
-
-    public CurrencyConverterFactory(IConversionGetter conversionGetter)
-    {
-        _conversionGetter= conversionGetter;
-        _currentConverter = Create();
-    }
-
-    public CurrencyConverter Get() =>
-        _currentConverter is null
-            ? Create()
-            : _currentConverter;
-
-    private CurrencyConverter Create() =>
-        ConverterExpired()
-            ? _conversionGetter.GetConversionRates()
-                .PipeNonNull(rates => new CurrencyConverter(rates))
-            : _currentConverter;
-
-    private bool ConverterExpired() =>
-        _dateOfConverterCreation - DateTime.Now > TimeSpan.FromHours(6);
-
-}
-
