@@ -1,10 +1,39 @@
 namespace Money;
 
-public abstract class Currency
+public abstract class Currency : IEquatable<Currency>
 {
     public abstract string Name { get; }
     public abstract string Symbol { get; }
     public abstract string Representation(decimal value);
+
+    public override int GetHashCode() => HashCode.Combine(Name, Symbol);
+    public override bool Equals(object? obj) => Equals(obj as Currency);
+    public bool Equals(Currency? currency)
+    {
+        if (currency is null)
+        {
+            return false;
+        }
+        if (Object.ReferenceEquals(this, currency))
+        {
+            return true;
+        }
+        return (Name == currency.Name) && (Symbol == currency.Symbol);
+    }
+
+    public static bool operator == (Currency a, Currency b) 
+    {
+        if (a is null)
+        {
+            if (b is null)
+                return true;
+
+            return false;
+        }
+        return a.Equals(b);
+    }
+
+    public static bool operator != (Currency a, Currency b) => !(a == b);
 }
 
 public class CurrencyFactory
